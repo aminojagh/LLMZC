@@ -7,19 +7,21 @@ class RAGBase:
         llm_client,
         instructions,
         prompt_template,
-        course="llm-zoomcamp",
-        model="gpt-5.4-mini"
+        model="gpt-5.4-mini",
+        search_boost_dict = {"question": 3.0, "section": 0.5},
+        search_filter_dict = {"course": "llm-zoomcamp"}
     ):
         self.index = index
         self.llm_client = llm_client
         self.instructions = instructions
         self.prompt_template = prompt_template
-        self.course = course
         self.model = model
+        self.search_boost_dict = search_boost_dict
+        self.search_filter_dict = search_filter_dict
 
     def search(self, query, num_results=5):
-        boost_dict = {"question": 3.0, "section": 0.5}
-        filter_dict = {"course": self.course}
+        boost_dict = self.search_boost_dict
+        filter_dict = self.search_filter_dict
 
         return self.index.search(
             query,
@@ -56,10 +58,22 @@ class RAGBase:
             input=input_messages
         )
 
-        return response.output_text
+        return response
     
     def rag(self, query):
         search_results = self.search(query)
         prompt = self.build_prompt(query, search_results)
         answer = self.llm(prompt)
         return answer
+    
+
+class GitRAG(RAGBase):
+    def build_context(self, search_results):
+        lines = []
+
+        for doc in search_results:
+            lines.append("filename: " + doc["filename"])
+            lines.append("content: " + doc["content"])
+            lines.append("="*30)
+
+        return "\n".join(lines).strip()

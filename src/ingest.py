@@ -21,10 +21,14 @@ def load_faq_data():
 
     return documents
 
-def build_index(documents):
-    index = Index(
+def build_index(
+        documents,
         text_fields=["question", "section", "answer"],
         keyword_fields=["course"]
+):
+    index = Index(
+        text_fields=text_fields,
+        keyword_fields=keyword_fields
     )
     index.fit(documents)
     return index

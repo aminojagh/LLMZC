@@ -20,14 +20,11 @@ class RAGBase:
         self.search_filter_dict = search_filter_dict
 
     def search(self, query, num_results=5):
-        boost_dict = self.search_boost_dict
-        filter_dict = self.search_filter_dict
-
         return self.index.search(
             query,
             num_results=num_results,
-            boost_dict=boost_dict,
-            filter_dict=filter_dict
+            boost_dict=self.search_boost_dict,
+            filter_dict=self.search_filter_dict
         )
     
     def build_context(self, search_results):
@@ -77,3 +74,19 @@ class GitRAG(RAGBase):
             lines.append("="*30)
 
         return "\n".join(lines).strip()
+    
+
+
+class RAGVector(RAGBase):
+    def __init__(self, embedder, **kwargs):
+        super().__init__(**kwargs)
+        self.embedder = embedder
+
+    def search(self, query, num_results=5):
+        query_vector = self.embedder.encode(query)
+
+        return self.index.search(
+            query_vector,
+            num_results=num_results,
+            filter_dict=self.search_filter_dict
+        )

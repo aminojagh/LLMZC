@@ -1,3 +1,10 @@
 .env
 *.pyc
 KB/
+.venv/
+**/.venv/
+
+models/
+**/models/
+
+**/__pycache__/

@@ -1,0 +1,25 @@
+# You'll need to replace 'your-gcs-bucket' with your actual GCS bucket name,
+# and 'my_project.my_dataset.nyc_taxi_data' with your actual BigQuery project, dataset, and table.
+id: nyc_taxi_data_pipeline
+namespace: company.team
+
+tasks:
+  - id: download_taxi_data
+    type: io.kestra.plugin.core.http.Download
+    uri: https://huggingface.co/datasets/kestra/datasets/raw/main/csv/orders.csv # Using a public CSV for demonstration. Replace with actual NYC taxi data URL if needed.
+
+  - id: upload_to_gcs
+    type: io.kestra.plugin.gcp.gcs.Upload
+    from: "{{ outputs.download_taxi_data.uri }}"
+    to: "gs://your-gcs-bucket/nyc_taxi_data.csv" # IMPORTANT: Replace 'your-gcs-bucket' with your GCS bucket name
+
+  - id: load_to_bigquery
+    type: io.kestra.plugin.gcp.bigquery.LoadFromGcs
+    from:
+      - "{{ outputs.upload_to_gcs.uri }}"
+    destinationTable: "my_project.my_dataset.nyc_taxi_data" # IMPORTANT: Replace with your BigQuery project, dataset, and table
+    format: CSV
+    autodetect: true
+    csvOptions: {} # Added missing csvOptions
+    writeDisposition: WRITE_TRUNCATE
+    createDisposition: CREATE_IF_NEEDED

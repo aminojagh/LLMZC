@@ -1,0 +1,46 @@
+id: nyc_taxi_csv_to_bigquery
+namespace: demo.bigquery
+
+description: |
+  Download NYC Taxi CSV data and load it into BigQuery.
+
+tasks:
+
+  - id: download_csv
+    type: io.kestra.plugin.core.http.Download
+
+    uri: https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2024-01.csv.gz
+
+  - id: decompress
+    type: io.kestra.plugin.compress.ArchiveDecompress
+
+    from: "{{ outputs.download_csv.uri }}"
+
+  - id: upload_to_gcs
+    type: io.kestra.plugin.gcp.gcs.Upload
+
+    serviceAccount: "{{ secret('GCP_SERVICE_ACCOUNT') }}"
+    bucket: your-gcs-bucket
+    from: "{{ outputs.decompress.files[0] }}"
+    name: yellow_tripdata_2024_01.csv
+
+  - id: load_bigquery
+    type: io.kestra.plugin.gcp.bigquery.LoadFromGcs
+
+    serviceAccount: "{{ secret('GCP_SERVICE_ACCOUNT') }}"
+    projectId: your-gcp-project
+    dataset: taxi_data
+    table: yellow_tripdata
+
+    sourceUris:
+      - gs://your-gcs-bucket/yellow_tripdata_2024_01.csv
+
+    format: CSV
+
+    autodetect: true
+
+    skipLeadingRows: 1
+
+    writeDisposition: WRITE_TRUNCATE
+
+    createDisposition: CREATE_IF_NEEDED

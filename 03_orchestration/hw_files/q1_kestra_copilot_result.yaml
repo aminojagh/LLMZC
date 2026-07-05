@@ -1,0 +1,12 @@
+# Please replace 'your_project', and 'your_dataset' with your actual GCP project and BigQuery dataset IDs.
+id: hippopotamus_658869
+namespace: company.team
+
+tasks:
+  - id: loadNycTaxiData
+    type: io.kestra.plugin.gcp.bigquery.Load
+    from: https://storage.googleapis.com/cloud-samples-data/bigquery/sample-data/nyc_taxi_trips.csv
+    destinationTable: your_project.your_dataset.nyc_taxi_trips
+    format: CSV
+    csvOptions:
+      skipLeadingRows: 1

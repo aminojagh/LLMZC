@@ -1,4 +1,4 @@
-from .utils import vec_to_str
+from utils import vec_to_str
 
 
 class RAGBase:

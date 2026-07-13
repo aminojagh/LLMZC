@@ -1,6 +1,7 @@
 import time
 from tqdm.auto import tqdm
 from .rag_helper import RAGBase
+from pydantic import BaseModel
 
 
 def calc_price(usage):
@@ -113,3 +114,7 @@ def map_progress(pool, seq, f):
             results.append(result)
 
     return results
+
+
+class Questions(BaseModel):
+    questions: list[str]

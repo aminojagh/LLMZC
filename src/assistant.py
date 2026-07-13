@@ -6,7 +6,7 @@ from pathlib import Path
 
 from data.ingest import load_faq_data
 from data.index import build_index
-from rag_helper import RAGBase
+from metrics import RAGWithMetrics
 
 
 templates_dir = Path(__file__).resolve().parent.parent / "templates"
@@ -27,7 +27,7 @@ def create_assistant(
         with open(templates_dir / "prompt_template.txt", "r") as file:
             prompt_template = file.read().strip()
 
-    return RAGBase(
+    return RAGWithMetrics(
         index=index,
         llm_client=OpenAI(),
         instructions = instructions,

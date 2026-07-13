@@ -9,14 +9,23 @@ from data.index import build_index
 from rag_helper import RAGBase
 
 
+templates_dir = Path(__file__).resolve().parent.parent / "templates"
+
 def create_assistant(
-    instructions,
-    prompt_template
+    instructions = None,
+    prompt_template = None
 ):
     load_dotenv()
 
     documents = load_faq_data()
     index = build_index(documents)
+
+    if instructions is None:
+        with open(templates_dir / "instructions.txt", "r") as file:
+            instructions = file.read().strip()
+    if prompt_template is None:
+        with open(templates_dir / "prompt_template.txt", "r") as file:
+            prompt_template = file.read().strip()
 
     return RAGBase(
         index=index,
@@ -27,21 +36,11 @@ def create_assistant(
 
 
 if __name__ == "__main__":
-    
-    templates_dir = Path(__file__).resolve().parent.parent / "templates"
-    print(f"templates_dir: {templates_dir}")
-    with open(templates_dir / "instructions.txt", "r") as file:
-        instructions = file.read().strip()
-    with open(templates_dir / "prompt_template.txt", "r") as file:
-        prompt_template = file.read().strip()
-    
 
     query = "How do I join the course?"
     if len(sys.argv) > 1:
         query = sys.argv[1]
 
-    print(f"query: {query}")
-
-    # assistant = create_assistant(instructions, prompt_template)
-    # answer = assistant.rag(query)
-    # print(answer)
+    assistant = create_assistant()
+    answer = assistant.rag(query)
+    print(answer)

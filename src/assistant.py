@@ -7,6 +7,7 @@ from pathlib import Path
 from data.ingest import load_faq_data
 from data.index import build_index
 from metrics import RAGWithMetrics
+from db_save import save_conversation
 
 
 templates_dir = Path(__file__).resolve().parent.parent / "templates"
@@ -44,3 +45,4 @@ if __name__ == "__main__":
     assistant = create_assistant()
     answer = assistant.rag(query)
     print(answer)
+    save_conversation(assistant.last_call, query, "llm-zoomcamp")

@@ -3,9 +3,9 @@ run:
 chat:
 	uv run streamlit run src/app.py
 network:
-	docker network create monitoring
+	docker network inspect monitoring >/dev/null 2>&1 || docker network create monitoring
 postgres: network
-	docker run -it \
+	docker start -a course-assistant-pg 2>/dev/null || docker run -it \
 		--name course-assistant-pg \
 		--network monitoring \
 		-e POSTGRES_USER=user \

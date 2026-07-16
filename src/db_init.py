@@ -63,6 +63,6 @@ def init_feedback():
         conn.close()
 
 if __name__ == "__main__":
-    init_db()
+    init_db(drop=True)
     init_feedback()
     print("Database initialized")

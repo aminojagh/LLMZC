@@ -1,6 +1,6 @@
 import time
 from tqdm.auto import tqdm
-from .rag_helper import RAGBase
+from rag_helper import RAGBase
 from pydantic import BaseModel
 
 

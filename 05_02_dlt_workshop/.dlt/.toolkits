@@ -16,3 +16,32 @@ init:
       sha3_256: bd0d85b8bf6b0e0ce454982cfa1f63baddc67cbd1f9d05254a4b6185b48643c0
   mcp_servers:
   - dlt-workspace-mcp
+  name: init
+filesystem-pipeline:
+  version: 0.1.1
+  description: Load files (CSV, Parquet, JSONL, or custom) from local disk, S3, GCS,
+    Azure, or SFTP into a destination using dlt's filesystem source.
+  tags:
+  - dlthub
+  - filesystem
+  - s3
+  - gcs
+  - azure
+  - sftp
+  - csv
+  - parquet
+  - jsonl
+  dependencies:
+  - init
+  workflow_entry_skill: create-filesystem-pipeline
+  installed_at: '2026-07-18T14:33:09.103672+00:00'
+  agent: claude
+  files:
+    .claude/skills/add-incremental-loading/SKILL.md:
+      sha3_256: 8fd5ee5ae1bdaeca3d154871774bd8e16b0eabbc70fc1b5f1967554b7a61cadf
+    .claude/skills/create-filesystem-pipeline/SKILL.md:
+      sha3_256: 98109cbd084ab77fbfe33c1253a5b414e5466b3bd0581469c37e371ac8d33f60
+    .claude/skills/optimize-filesystem-performance/SKILL.md:
+      sha3_256: 630e89afb9739a4b37ad171ac750317fbff68fe425607852f0592eeb816dc474
+    .claude/rules/filesystem-pipeline-workflow.md:
+      sha3_256: 29317f628e0f1e746b9b78980d34d12fde399bb2ac38a41a3757eb610571b007

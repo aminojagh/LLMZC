@@ -1,5 +1,7 @@
-from utils import vec_to_str
+import time
 
+from src.utils import vec_to_str
+from src.metrics import calculate_cost, LLMCallRecord
 
 class RAGBase:
     def __init__(
@@ -68,6 +70,12 @@ class RAGBase:
     
 
 class GitRAG(RAGBase):
+    def __init__(self, **kwargs):
+        super().__init__(
+            search_boost_dict=None,
+            search_filter_dict=None,
+            **kwargs
+        )
     def build_context(self, search_results):
         lines = []
 
@@ -77,6 +85,27 @@ class GitRAG(RAGBase):
             lines.append("="*30)
 
         return "\n".join(lines).strip()
+    
+
+class RAGTraced(GitRAG):
+    def __init__(self, tracer, **kwargs):
+        super().__init__(**kwargs)
+        self.tracer = tracer
+    def rag(self, query):
+        with self.tracer.start_as_current_span("rag_call") as span:
+            return super().rag(query)
+    def llm(self, prompt):
+        with self.tracer.start_as_current_span("llm_call") as span:
+            llm_answer =  super().llm(prompt)
+            usage = llm_answer.usage
+            span.set_attribute("input_tokens", usage.input_tokens)
+            span.set_attribute("output_tokens", usage.output_tokens)
+            cost = calculate_cost(self.model, usage)
+            span.set_attribute("cost", cost)
+            return llm_answer
+    def search(self, query, num_results=5):
+        with self.tracer.start_as_current_span("search") as span:
+            return super().search(query, num_results)
     
 
 
@@ -123,3 +152,47 @@ class RAGPgVector(RAGBase):
             {"course": r[0], "section": r[1], "question": r[2], "answer": r[3]}
             for r in rows
         ]
+    
+
+class RAGWithMetrics(RAGBase):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.last_call: LLMCallRecord = None
+
+    def llm(self, prompt):
+        start_time = time.time()
+        response = self._call_llm(prompt)
+        response_time = time.time() - start_time
+        self._log_response(prompt, response, response_time)
+        return response.output_text
+
+    def _call_llm(self, prompt):
+        input_messages = [
+            {"role": "developer", "content": self.instructions},
+            {"role": "user", "content": prompt}
+        ]
+        response = self.llm_client.responses.create(
+            model=self.model,
+            input=input_messages
+        )
+        return response
+
+    def _log_response(self, prompt, response, response_time):
+        usage = response.usage
+        cost = calculate_cost(self.model, usage)
+
+        call_record = LLMCallRecord(
+            model=self.model,
+            prompt=prompt,
+            instructions=self.instructions,
+            answer=response.output_text,
+            prompt_tokens=usage.input_tokens,
+            completion_tokens=usage.output_tokens,
+            total_tokens=usage.total_tokens,
+            response_time=response_time,
+            cost=cost,
+        )
+    
+        print(call_record)
+        self.last_call = call_record

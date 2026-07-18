@@ -8,3 +8,5 @@ models/
 **/models/
 
 **/__pycache__/
+
+*.db

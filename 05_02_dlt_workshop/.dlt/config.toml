@@ -7,3 +7,7 @@ dlthub_telemetry = true
 
 [sources.filesystem]
 bucket_url = "file:///home/amino/.claude/projects"
+
+[sources.agent_logs]
+base_url = "https://test-agent-traces-api-xt2e7ottma-ew.a.run.app"
+

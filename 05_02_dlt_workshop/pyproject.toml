@@ -16,4 +16,7 @@ dependencies = [
     "pathspec>=0.11.2",
     "pydbml>=1.2.0",
     "croniter>=6.0.0",
+    "pandas>=2.3.3",
+    "numpy>=2.2.6",
+    "altair>=6.2.2",
 ]

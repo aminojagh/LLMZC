@@ -45,3 +45,33 @@ filesystem-pipeline:
       sha3_256: 630e89afb9739a4b37ad171ac750317fbff68fe425607852f0592eeb816dc474
     .claude/rules/filesystem-pipeline-workflow.md:
       sha3_256: 29317f628e0f1e746b9b78980d34d12fde399bb2ac38a41a3757eb610571b007
+  name: filesystem-pipeline
+data-exploration:
+  version: 0.1.1
+  description: Quick insights from dlt pipeline data. Connect to a pipeline, profile
+    tables, plan charts, and assemble marimo dashboards.
+  tags:
+  - dlthub
+  - marimo
+  - ibis
+  - data-exploration
+  - dashboards
+  - altair
+  dependencies:
+  - init
+  workflow_entry_skill: explore-data
+  installed_at: '2026-07-19T08:38:41.905642+00:00'
+  agent: claude
+  files:
+    .claude/skills/build-notebook/SKILL.md:
+      sha3_256: a88f4c19fb10f5afcdcf389e11b938310d1457bf86fed0b28df9cab606961a91
+    .claude/skills/build-notebook/references/notebook-patterns.md:
+      sha3_256: 96d80469820be9e1beddd10961b0a588da526c7678a0d12561e24f30e91037d3
+    .claude/skills/explore-data/SKILL.md:
+      sha3_256: d703ba8cf43cd5564274df0b51bb2df791598c3de27f904ee71ce295595f6cee
+    .claude/skills/explore-data/references/analysis-plan-format.md:
+      sha3_256: 8fcb5223200f4e566432fda35be8b555b8a88274b9f1dc42c41a21c4d6ddbab5
+    .claude/skills/explore-data/references/dlt-relation-api.md:
+      sha3_256: a13cb108f3e47f13b85d54e98c5e486f2c7b12638e00b168ddffc9e33e745047
+    .claude/rules/data-exploration-workflow.md:
+      sha3_256: 893690d7e0cf53c1b6e9ecc335811dbce7bc9c22aad15baa9aeab5caf0052921

@@ -14,10 +14,10 @@ def load_claude_logs() -> None:
         pipeline_name="claude_logs_pipeline",
         destination="duckdb",
         dataset_name="claude_logs",
-        dev_mode=True,  # fresh dataset on every run during dev
     )
 
     reader = (filesystem(file_glob="**/*.jsonl") | read_jsonl()).with_name("claude_logs")
+    reader.max_table_nesting = 0  # keep nested objects/lists as raw JSON columns, no child tables
 
     load_info = pipeline.run(reader, write_disposition="replace")
     print(load_info)

@@ -19,4 +19,9 @@ dependencies = [
     "pandas>=2.3.3",
     "numpy>=2.2.6",
     "altair>=6.2.2",
+    "openai>=2.46.0",
+    "minsearch>=0.2.0",
+    "requests>=2.34.2",
+    "python-dotenv>=1.2.2",
+    "pydantic-ai>=2.13.0",
 ]

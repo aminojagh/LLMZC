@@ -3,6 +3,7 @@ from typing import Any
 import dlt
 from dlt.hub import run
 from dlt.sources.rest_api import RESTAPIConfig, rest_api_resources
+from dlt.hub.run import trigger
 
 
 @dlt.source(name="agent_logs")
@@ -37,6 +38,7 @@ def agent_logs_source(base_url: str = dlt.config.value) -> Any:
 
 
 @run.pipeline("agent_logs_pipeline")
+# @run.pipeline("agent_logs_pipeline", trigger=trigger.schedule("0 12 * * *"))
 def load_logs() -> None:
     pipeline = dlt.pipeline(
         pipeline_name="agent_logs_pipeline",

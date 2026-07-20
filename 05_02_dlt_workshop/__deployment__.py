@@ -1,6 +1,5 @@
-"""Deployment manifest — import the pipelines and notebooks you want to deploy and list them in __all__."""
+"""dltHub workshop — ingest Claude Code agent logs from a public test API into DuckDB."""
 
-# from pipeline import my_pipeline
-# from notebook import my_notebook
+from rest_api_pipeline import load_logs
 
-__all__: list[str] = []
+__all__ = ["load_logs"]

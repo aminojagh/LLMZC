@@ -1,6 +1,7 @@
 from typing import Any
 
 import dlt
+from dlt.hub import run
 from dlt.sources.rest_api import RESTAPIConfig, rest_api_resources
 
 
@@ -35,12 +36,13 @@ def agent_logs_source(base_url: str = dlt.config.value) -> Any:
     yield from rest_api_resources(config)
 
 
+@run.pipeline("agent_logs_pipeline")
 def load_logs() -> None:
     pipeline = dlt.pipeline(
         pipeline_name="agent_logs_pipeline",
-        destination="duckdb",
+        # destination="duckdb",
+        destination="playground",
         dataset_name="agent_logs",
-        dev_mode=True,  # fresh dataset on every run during dev
     )
 
     load_info = pipeline.run(agent_logs_source(), write_disposition="replace")

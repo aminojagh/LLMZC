@@ -4,6 +4,8 @@
 log_level="WARNING"  # the system log level of dlt
 # use the dlthub_telemetry setting to enable/disable anonymous usage data reporting, see https://dlthub.com/docs/reference/telemetry
 dlthub_telemetry = true
+workspace_id = "eaa6a604-cb6e-4959-80f2-f0d97c833752"
+organization_id = "75be5edc-169a-445b-92c8-263c52147e08"
 
 [sources.filesystem]
 bucket_url = "file:///home/amino/.claude/projects"
@@ -11,3 +13,6 @@ bucket_url = "file:///home/amino/.claude/projects"
 [sources.agent_logs]
 base_url = "https://test-agent-traces-api-xt2e7ottma-ew.a.run.app"
 
+
+[workspace.settings]
+name = "LLMZC"
